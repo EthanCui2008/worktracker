@@ -38,7 +38,7 @@ body {
 
 #app {
   width: 100%;
-  max-width: 480px;
+  max-width: 720px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -99,12 +99,6 @@ body {
   letter-spacing: 0.8px;
 }
 
-.section-divider {
-  height: 1px;
-  background: var(--border-light);
-  margin: 16px 0 12px;
-}
-
 /* Clock */
 .section--clock {
   text-align: center;
@@ -131,66 +125,63 @@ body {
   font-weight: 400;
 }
 
-/* Timer Tabs */
-.timer-tabs {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 24px;
-  background: var(--surface-hover);
-  border-radius: 10px;
-  padding: 4px;
+/* Timers Grid */
+.timers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
 }
 
-.tab {
-  flex: 1;
-  padding: 8px 0;
-  border: none;
-  background: none;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  cursor: pointer;
-  border-radius: 8px;
-  transition: all 0.2s;
+.timer-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 12px;
+  border-radius: 12px;
+  border: 2px solid var(--border-light);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.timer-card--active {
+  box-shadow: var(--shadow-md);
+}
+
+.timer-card--work.timer-card--active {
+  border-color: var(--primary);
+}
+
+.timer-card--break.timer-card--active {
+  border-color: var(--green);
+}
+
+.timer-card--stopwatch.timer-card--active {
+  border-color: var(--orange);
+}
+
+.timer-card-header {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 6px;
 }
 
-.tab:hover {
-  color: var(--text);
-  background: rgba(0, 0, 0, 0.04);
-}
-
-.tab.active {
-  color: var(--primary);
-  background: var(--surface);
-  box-shadow: var(--shadow-sm);
-}
-
-.tab-dot {
-  width: 6px;
-  height: 6px;
+.timer-card-dot {
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   display: inline-block;
 }
 
-.tab-dot--work { background: var(--primary); }
-.tab-dot--break { background: var(--green); }
-.tab-dot--stopwatch { background: var(--orange); }
+.timer-card-dot--work { background: var(--primary); }
+.timer-card-dot--break { background: var(--green); }
+.timer-card-dot--stopwatch { background: var(--orange); }
 
-/* Timer Panels */
-.timer-panel {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-}
-
-.timer-panel.active {
-  display: flex;
+.timer-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .timer-ring {
@@ -198,12 +189,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 160px;
-  height: 160px;
+  width: 140px;
+  height: 140px;
 }
 
 .timer-display {
-  font-size: 42px;
+  font-size: 32px;
   font-weight: 300;
   letter-spacing: -1px;
   color: var(--text);
@@ -215,23 +206,31 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  font-size: 28px;
 }
 
 .timer-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   color: var(--text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-top: -8px;
+  margin-top: -6px;
 }
 
 .timer-controls {
   display: flex;
-  gap: 10px;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 /* Progress Ring */
+.progress-ring {
+  width: 140px;
+  height: 140px;
+}
+
 .progress-ring__bg {
   stroke: var(--border-light);
 }
@@ -244,18 +243,18 @@ body {
 /* Cumulative Card */
 .cumulative-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  gap: 2px;
   width: 100%;
-  max-width: 240px;
-  padding: 10px 16px;
+  padding: 8px 12px;
   background: var(--surface-hover);
-  border-radius: 10px;
+  border-radius: 8px;
   border: 1px solid var(--border-light);
 }
 
 .cumulative-label {
-  font-size: 12px;
+  font-size: 10px;
   color: var(--text-secondary);
 }
 
@@ -269,16 +268,16 @@ body {
 /* Buttons */
 .btn {
   font-family: inherit;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  padding: 10px 24px;
+  padding: 8px 18px;
   border-radius: 24px;
   border: none;
   cursor: pointer;
   transition: all 0.2s;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .btn-icon {
@@ -320,19 +319,6 @@ body {
 .btn-secondary:hover {
   background: var(--surface-hover);
   border-color: #ccc;
-}
-
-.btn-switch {
-  width: 100%;
-  justify-content: center;
-  background: var(--surface-hover);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-light);
-}
-
-.btn-switch:hover {
-  background: #e8eaed;
-  border-color: var(--border);
 }
 
 /* Noise */
@@ -391,17 +377,26 @@ body {
 .noise-btn.active .noise-btn-dot--pink { background: rgba(255,255,255,0.7); }
 .noise-btn.active .noise-btn-dot--brown { background: rgba(255,255,255,0.7); }
 
+.waveform-controls {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .slider-group {
   display: flex;
   align-items: center;
   gap: 10px;
   width: 100%;
-  max-width: 280px;
 }
 
-.slider-icon {
-  color: var(--text-tertiary);
-  flex-shrink: 0;
+.slider-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  min-width: 80px;
 }
 
 .slider-group input[type="range"] {
@@ -414,9 +409,17 @@ body {
   font-size: 12px;
   font-weight: 500;
   color: var(--text-secondary);
-  min-width: 32px;
+  min-width: 52px;
   text-align: right;
   font-variant-numeric: tabular-nums;
+}
+
+#waveform-canvas {
+  width: 100%;
+  max-width: 360px;
+  height: 64px;
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
 }
 
 /* Warning */
@@ -437,4 +440,29 @@ body {
 
 .footer-sep {
   color: var(--border);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .timers-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .timer-display {
+    font-size: 42px;
+  }
+
+  .timer-display--overlay {
+    font-size: 36px;
+  }
+
+  .timer-ring {
+    width: 160px;
+    height: 160px;
+  }
+
+  .progress-ring {
+    width: 160px;
+    height: 160px;
+  }
 }

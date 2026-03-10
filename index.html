@@ -37,88 +37,78 @@
           <h2 class="section-title">Timers</h2>
         </div>
 
-        <div class="timer-tabs">
-          <button class="tab active" data-timer="work">
-            <span class="tab-dot tab-dot--work"></span>
-            Work
-          </button>
-          <button class="tab" data-timer="break">
-            <span class="tab-dot tab-dot--break"></span>
-            Break
-          </button>
-          <button class="tab" data-timer="stopwatch">
-            <span class="tab-dot tab-dot--stopwatch"></span>
-            Stopwatch
-          </button>
-        </div>
+        <div class="timers-grid">
+          <!-- Work Timer -->
+          <div id="timer-work" class="timer-card timer-card--work">
+            <div class="timer-card-header">
+              <span class="timer-card-dot timer-card-dot--work"></span>
+              <span class="timer-card-title">Work</span>
+            </div>
+            <div class="timer-ring">
+              <div class="timer-display" id="work-display">00:00:00</div>
+            </div>
+            <div class="timer-label">Session time</div>
+            <div class="timer-controls">
+              <button id="work-start" class="btn btn-primary">
+                <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Start
+              </button>
+              <button id="work-reset" class="btn btn-secondary">Reset</button>
+            </div>
+          </div>
 
-        <!-- Work Timer -->
-        <div id="timer-work" class="timer-panel active">
-          <div class="timer-ring">
-            <div class="timer-display" id="work-display">00:00:00</div>
+          <!-- Break Timer -->
+          <div id="timer-break" class="timer-card timer-card--break">
+            <div class="timer-card-header">
+              <span class="timer-card-dot timer-card-dot--break"></span>
+              <span class="timer-card-title">Break</span>
+            </div>
+            <div class="timer-ring">
+              <div class="timer-display" id="break-display">00:00:00</div>
+            </div>
+            <div class="timer-label">Current break</div>
+            <div class="timer-controls">
+              <button id="break-start" class="btn btn-primary">
+                <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Start
+              </button>
+              <button id="break-reset" class="btn btn-secondary">Reset</button>
+            </div>
+            <div class="cumulative-card">
+              <span class="cumulative-label">Total break time</span>
+              <span class="cumulative-value" id="break-cumulative">00:00</span>
+            </div>
           </div>
-          <div class="timer-label">Session time</div>
-          <div class="timer-controls">
-            <button id="work-start" class="btn btn-primary">
-              <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              Start
-            </button>
-            <button id="work-reset" class="btn btn-secondary">Reset</button>
+
+          <!-- 20-min Stopwatch -->
+          <div id="timer-stopwatch" class="timer-card timer-card--stopwatch">
+            <div class="timer-card-header">
+              <span class="timer-card-dot timer-card-dot--stopwatch"></span>
+              <span class="timer-card-title">Stopwatch</span>
+            </div>
+            <div class="timer-ring">
+              <svg class="progress-ring" width="160" height="160" viewBox="0 0 160 160">
+                <circle class="progress-ring__bg" cx="80" cy="80" r="70" fill="none" stroke-width="4"/>
+                <circle id="stopwatch-progress" class="progress-ring__fill" cx="80" cy="80" r="70" fill="none" stroke-width="4"
+                  stroke-dasharray="439.82" stroke-dashoffset="0"
+                  transform="rotate(-90 80 80)"/>
+              </svg>
+              <div class="timer-display timer-display--overlay" id="stopwatch-display">20:00</div>
+            </div>
+            <div class="timer-label">20-minute countdown</div>
+            <div class="timer-controls">
+              <button id="stopwatch-start" class="btn btn-primary">
+                <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Start
+              </button>
+              <button id="stopwatch-reset" class="btn btn-secondary">Reset</button>
+            </div>
+            <div class="cumulative-card">
+              <span class="cumulative-label">Cumulative break time</span>
+              <span class="cumulative-value" id="stopwatch-cumulative">00:00</span>
+            </div>
           </div>
         </div>
-
-        <!-- Break Timer -->
-        <div id="timer-break" class="timer-panel">
-          <div class="timer-ring">
-            <div class="timer-display" id="break-display">00:00:00</div>
-          </div>
-          <div class="timer-label">Current break</div>
-          <div class="timer-controls">
-            <button id="break-start" class="btn btn-primary">
-              <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              Start
-            </button>
-            <button id="break-reset" class="btn btn-secondary">Reset</button>
-          </div>
-          <div class="cumulative-card">
-            <span class="cumulative-label">Total break time</span>
-            <span class="cumulative-value" id="break-cumulative">00:00</span>
-          </div>
-        </div>
-
-        <!-- 20-min Stopwatch -->
-        <div id="timer-stopwatch" class="timer-panel">
-          <div class="timer-ring">
-            <svg class="progress-ring" width="160" height="160" viewBox="0 0 160 160">
-              <circle class="progress-ring__bg" cx="80" cy="80" r="70" fill="none" stroke-width="4"/>
-              <circle id="stopwatch-progress" class="progress-ring__fill" cx="80" cy="80" r="70" fill="none" stroke-width="4"
-                stroke-dasharray="439.82" stroke-dashoffset="0"
-                transform="rotate(-90 80 80)"/>
-            </svg>
-            <div class="timer-display timer-display--overlay" id="stopwatch-display">20:00</div>
-          </div>
-          <div class="timer-label">20-minute countdown</div>
-          <div class="timer-controls">
-            <button id="stopwatch-start" class="btn btn-primary">
-              <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              Start
-            </button>
-            <button id="stopwatch-reset" class="btn btn-secondary">Reset</button>
-          </div>
-          <div class="cumulative-card">
-            <span class="cumulative-label">Cumulative break time</span>
-            <span class="cumulative-value" id="stopwatch-cumulative">00:00</span>
-          </div>
-        </div>
-
-        <div class="section-divider"></div>
-        <button id="switch-timer" class="btn btn-switch">
-          <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/>
-            <polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
-          </svg>
-          Switch Timer
-        </button>
       </section>
 
       <!-- Noise Generator -->
@@ -146,15 +136,30 @@
             </button>
           </div>
 
-          <div class="slider-group">
-            <svg class="slider-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-            </svg>
-            <input type="range" id="noise-volume" min="0" max="100" value="30" />
-            <span class="slider-value" id="volume-label">30%</span>
+          <div class="waveform-controls">
+            <div class="slider-group">
+              <label class="slider-label">Volume</label>
+              <input type="range" id="noise-volume" min="0" max="100" value="30" />
+              <span class="slider-value" id="volume-label">30%</span>
+            </div>
+            <div class="slider-group">
+              <label class="slider-label">Low Cut</label>
+              <input type="range" id="noise-lowcut" min="20" max="2000" value="20" />
+              <span class="slider-value" id="lowcut-label">20 Hz</span>
+            </div>
+            <div class="slider-group">
+              <label class="slider-label">High Cut</label>
+              <input type="range" id="noise-highcut" min="200" max="20000" value="20000" />
+              <span class="slider-value" id="highcut-label">20k Hz</span>
+            </div>
+            <div class="slider-group">
+              <label class="slider-label">Stereo Width</label>
+              <input type="range" id="noise-stereo" min="0" max="100" value="0" />
+              <span class="slider-value" id="stereo-label">0%</span>
+            </div>
           </div>
+
+          <canvas id="waveform-canvas" width="320" height="64"></canvas>
 
           <button id="noise-toggle" class="btn btn-primary">
             <svg class="btn-icon" id="noise-icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
