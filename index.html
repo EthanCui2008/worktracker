@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WorkTracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- Clock -->
+      <section id="clock-section" class="section">
+        <div id="clock" class="clock"></div>
+        <div id="clock-date" class="clock-date"></div>
+      </section>
+
+      <!-- Timers -->
+      <section id="timer-section" class="section">
+        <div class="timer-tabs">
+          <button class="tab active" data-timer="work">Work</button>
+          <button class="tab" data-timer="break">Break</button>
+          <button class="tab" data-timer="stopwatch">Stopwatch</button>
+        </div>
+
+        <!-- Work Timer -->
+        <div id="timer-work" class="timer-panel active">
+          <div class="timer-display" id="work-display">00:00:00</div>
+          <div class="timer-controls">
+            <button id="work-start" class="btn btn-primary">Start</button>
+            <button id="work-reset" class="btn btn-secondary">Reset</button>
+          </div>
+        </div>
+
+        <!-- Break Timer -->
+        <div id="timer-break" class="timer-panel">
+          <div class="timer-display" id="break-display">00:00:00</div>
+          <div class="timer-controls">
+            <button id="break-start" class="btn btn-primary">Start</button>
+            <button id="break-reset" class="btn btn-secondary">Reset</button>
+          </div>
+          <div class="cumulative">
+            Cumulative break: <span id="break-cumulative">00:00</span>
+          </div>
+        </div>
+
+        <!-- 20-min Stopwatch -->
+        <div id="timer-stopwatch" class="timer-panel">
+          <div class="timer-display" id="stopwatch-display">20:00</div>
+          <div class="timer-controls">
+            <button id="stopwatch-start" class="btn btn-primary">Start</button>
+            <button id="stopwatch-reset" class="btn btn-secondary">Reset</button>
+          </div>
+          <div class="cumulative">
+            Cumulative break time: <span id="stopwatch-cumulative">00:00</span>
+          </div>
+        </div>
+
+        <!-- Switch button -->
+        <button id="switch-timer" class="btn btn-switch">Switch Timer</button>
+      </section>
+
+      <!-- Noise Generator -->
+      <section id="noise-section" class="section">
+        <h2 class="section-title">Noise Generator</h2>
+        <div class="noise-controls">
+          <div class="noise-type-row">
+            <button class="noise-btn active" data-noise="white">White</button>
+            <button class="noise-btn" data-noise="pink">Pink</button>
+            <button class="noise-btn" data-noise="brown">Brown</button>
+          </div>
+          <div class="slider-group">
+            <label>Volume</label>
+            <input type="range" id="noise-volume" min="0" max="100" value="30" />
+          </div>
+          <button id="noise-toggle" class="btn btn-primary">Play</button>
+        </div>
+      </section>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
