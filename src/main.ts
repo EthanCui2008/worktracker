@@ -354,13 +354,6 @@ function startNoise() {
     gainL.gain.value = 1
     gainR.gain.value = 1
 
-    // Mix: mono content + stereo difference
-    const monoGain = 1 - stereoWidth
-    const stereoGain = stereoWidth
-
-    const monoMix = audioCtx.createGain()
-    monoMix.gain.value = monoGain
-
     noiseNodeL.connect(gainL)
     noiseNodeR.connect(gainR)
 
