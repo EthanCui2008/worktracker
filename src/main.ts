@@ -1,5 +1,9 @@
 import './style.css'
 
+const PLAY_ICON = '<svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>'
+const PAUSE_ICON = '<svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>'
+const STOP_ICON = '<svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>'
+
 // ── Clock ──
 function updateClock() {
   const now = new Date()
@@ -37,6 +41,11 @@ function formatMinSec(ms: number): string {
   const m = Math.floor(totalSeconds / 60)
   const s = totalSeconds % 60
   return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+}
+
+function setBtnState(btn: HTMLButtonElement, running: boolean, label: string, icon: string) {
+  btn.innerHTML = `${icon} ${label}`
+  btn.classList.toggle('running', running)
 }
 
 // ── Tab Switching ──
@@ -78,14 +87,12 @@ workStartBtn.addEventListener('click', () => {
   if (workRunning) {
     workElapsed += Date.now() - workStart
     workRunning = false
-    workStartBtn.textContent = 'Start'
-    workStartBtn.classList.remove('running')
+    setBtnState(workStartBtn, false, 'Start', PLAY_ICON)
     if (workInterval) clearInterval(workInterval)
   } else {
     workStart = Date.now()
     workRunning = true
-    workStartBtn.textContent = 'Pause'
-    workStartBtn.classList.add('running')
+    setBtnState(workStartBtn, true, 'Pause', PAUSE_ICON)
     workInterval = window.setInterval(updateWorkDisplay, 100)
   }
 })
@@ -94,8 +101,7 @@ document.getElementById('work-reset')!.addEventListener('click', () => {
   workRunning = false
   workElapsed = 0
   if (workInterval) clearInterval(workInterval)
-  workStartBtn.textContent = 'Start'
-  workStartBtn.classList.remove('running')
+  setBtnState(workStartBtn, false, 'Start', PLAY_ICON)
   workDisplay.textContent = '00:00:00'
 })
 
@@ -119,10 +125,8 @@ breakStartBtn.addEventListener('click', () => {
   if (breakRunning) {
     breakElapsed += Date.now() - breakStart
     breakRunning = false
-    breakStartBtn.textContent = 'Start'
-    breakStartBtn.classList.remove('running')
+    setBtnState(breakStartBtn, false, 'Start', PLAY_ICON)
     if (breakInterval) clearInterval(breakInterval)
-    // Add to cumulative
     breakCumulative += breakElapsed
     breakCumulativeEl.textContent = formatMinSec(breakCumulative)
     breakElapsed = 0
@@ -130,8 +134,7 @@ breakStartBtn.addEventListener('click', () => {
   } else {
     breakStart = Date.now()
     breakRunning = true
-    breakStartBtn.textContent = 'Pause'
-    breakStartBtn.classList.add('running')
+    setBtnState(breakStartBtn, true, 'Pause', PAUSE_ICON)
     breakInterval = window.setInterval(updateBreakDisplay, 100)
   }
 })
@@ -141,14 +144,14 @@ document.getElementById('break-reset')!.addEventListener('click', () => {
   breakElapsed = 0
   breakCumulative = 0
   if (breakInterval) clearInterval(breakInterval)
-  breakStartBtn.textContent = 'Start'
-  breakStartBtn.classList.remove('running')
+  setBtnState(breakStartBtn, false, 'Start', PLAY_ICON)
   breakDisplay.textContent = '00:00:00'
   breakCumulativeEl.textContent = '00:00'
 })
 
 // ── 20-min Stopwatch (countdown) ──
 const TWENTY_MIN = 20 * 60 * 1000
+const CIRCUMFERENCE = 2 * Math.PI * 70 // matches r=70 in SVG
 let swRunning = false
 let swRemaining = TWENTY_MIN
 let swStart = 0
@@ -158,11 +161,18 @@ let swCumulative = 0
 const swDisplay = document.getElementById('stopwatch-display')!
 const swStartBtn = document.getElementById('stopwatch-start')! as HTMLButtonElement
 const swCumulativeEl = document.getElementById('stopwatch-cumulative')!
+const swProgress = document.getElementById('stopwatch-progress')! as unknown as SVGCircleElement
+
+function updateProgressRing(fraction: number) {
+  const offset = CIRCUMFERENCE * (1 - fraction)
+  swProgress.style.strokeDashoffset = String(offset)
+}
 
 function updateStopwatchDisplay() {
   const elapsed = Date.now() - swStart
   const remaining = Math.max(0, swRemaining - elapsed)
   swDisplay.textContent = formatMinSec(remaining)
+  updateProgressRing(remaining / TWENTY_MIN)
 
   if (remaining <= 5 * 60 * 1000) {
     swDisplay.classList.add('warning')
@@ -171,16 +181,15 @@ function updateStopwatchDisplay() {
   }
 
   if (remaining <= 0) {
-    // Timer done
     swRunning = false
-    swStartBtn.textContent = 'Start'
-    swStartBtn.classList.remove('running')
+    setBtnState(swStartBtn, false, 'Start', PLAY_ICON)
     if (swInterval) clearInterval(swInterval)
     swCumulative += TWENTY_MIN
     swCumulativeEl.textContent = formatMinSec(swCumulative)
     swRemaining = TWENTY_MIN
     swDisplay.textContent = formatMinSec(TWENTY_MIN)
     swDisplay.classList.remove('warning')
+    updateProgressRing(1)
   }
 }
 
@@ -192,18 +201,16 @@ swStartBtn.addEventListener('click', () => {
     swCumulative += breakUsed
     swCumulativeEl.textContent = formatMinSec(swCumulative)
     swRunning = false
-    swStartBtn.textContent = 'Start'
-    swStartBtn.classList.remove('running')
+    setBtnState(swStartBtn, false, 'Start', PLAY_ICON)
     if (swInterval) clearInterval(swInterval)
-    // Reset for next use
     swRemaining = TWENTY_MIN
     swDisplay.textContent = formatMinSec(TWENTY_MIN)
     swDisplay.classList.remove('warning')
+    updateProgressRing(1)
   } else {
     swStart = Date.now()
     swRunning = true
-    swStartBtn.textContent = 'Stop'
-    swStartBtn.classList.add('running')
+    setBtnState(swStartBtn, true, 'Stop', STOP_ICON)
     swInterval = window.setInterval(updateStopwatchDisplay, 100)
   }
 })
@@ -213,11 +220,11 @@ document.getElementById('stopwatch-reset')!.addEventListener('click', () => {
   swRemaining = TWENTY_MIN
   swCumulative = 0
   if (swInterval) clearInterval(swInterval)
-  swStartBtn.textContent = 'Start'
-  swStartBtn.classList.remove('running')
+  setBtnState(swStartBtn, false, 'Start', PLAY_ICON)
   swDisplay.textContent = formatMinSec(TWENTY_MIN)
   swDisplay.classList.remove('warning')
   swCumulativeEl.textContent = '00:00'
+  updateProgressRing(1)
 })
 
 // ── Noise Generator ──
@@ -228,12 +235,14 @@ let noiseType: 'white' | 'pink' | 'brown' = 'white'
 let noisePlaying = false
 
 const noiseToggle = document.getElementById('noise-toggle')! as HTMLButtonElement
+const noiseLabel = document.getElementById('noise-label')!
 const volumeSlider = document.getElementById('noise-volume')! as HTMLInputElement
+const volumeLabel = document.getElementById('volume-label')!
 const noiseBtns = document.querySelectorAll<HTMLButtonElement>('.noise-btn')
 
 function generateNoiseBuffer(ctx: AudioContext, type: 'white' | 'pink' | 'brown'): AudioBuffer {
   const sampleRate = ctx.sampleRate
-  const length = sampleRate * 4 // 4 seconds, looped
+  const length = sampleRate * 4
   const buffer = ctx.createBuffer(1, length, sampleRate)
   const data = buffer.getChannelData(0)
 
@@ -255,7 +264,6 @@ function generateNoiseBuffer(ctx: AudioContext, type: 'white' | 'pink' | 'brown'
       b6 = white * 0.115926
     }
   } else {
-    // Brown noise
     let last = 0
     for (let i = 0; i < length; i++) {
       const white = Math.random() * 2 - 1
@@ -303,12 +311,12 @@ noiseToggle.addEventListener('click', () => {
   if (noisePlaying) {
     stopNoiseNode()
     noisePlaying = false
-    noiseToggle.textContent = 'Play'
+    noiseLabel.textContent = 'Play'
     noiseToggle.classList.remove('running')
   } else {
     startNoise()
     noisePlaying = true
-    noiseToggle.textContent = 'Stop'
+    noiseLabel.textContent = 'Stop'
     noiseToggle.classList.add('running')
   }
 })
@@ -318,13 +326,15 @@ noiseBtns.forEach(btn => {
     noiseType = btn.dataset.noise as 'white' | 'pink' | 'brown'
     noiseBtns.forEach(b => b.classList.toggle('active', b === btn))
     if (noisePlaying) {
-      startNoise() // Restart with new type
+      startNoise()
     }
   })
 })
 
 volumeSlider.addEventListener('input', () => {
+  const val = parseInt(volumeSlider.value)
+  volumeLabel.textContent = `${val}%`
   if (gainNode) {
-    gainNode.gain.value = parseInt(volumeSlider.value) / 100
+    gainNode.gain.value = val / 100
   }
 })
